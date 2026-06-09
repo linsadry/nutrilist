@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FAFAF8" />
+  <meta name="color-scheme" content="light only" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="NutriList" />
+  <meta name="description" content="Transforme sua dieta em lista de compras." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>NutriList</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <span class="app-logo">🥦</span>
+          <h1 class="app-title">NutriList</h1>
+        </div>
+        <nav class="tab-nav" role="tablist">
+          <button class="tab-btn active" data-tab="import" role="tab" aria-selected="true">Dieta</button>
+          <button class="tab-btn" data-tab="list" role="tab" aria-selected="false">Lista</button>
+          <button class="tab-btn" data-tab="market" role="tab" aria-selected="false">Feira</button>
+          <button class="tab-btn" data-tab="stock" role="tab" aria-selected="false">Estoque</button>
+          <button class="tab-btn" data-tab="history" role="tab" aria-selected="false">Histórico</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- TAB: IMPORT -->
+      <section id="tab-import" class="tab-panel active" role="tabpanel">
+        <div class="section-header">
+          <h2 class="section-title">Importar dieta</h2>
+          <p class="section-sub">Faça upload do PDF, TXT ou cole o texto abaixo.</p>
+        </div>
+
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="file-input" accept=".pdf,.txt" hidden />
+          <div class="upload-content">
+            <span class="upload-icon">↑</span>
+            <p class="upload-label">Arraste um arquivo ou <button class="link-btn" id="browse-btn">escolha aqui</button></p>
+            <p class="upload-hint">PDF ou TXT</p>
+          </div>
+        </div>
+
+        <div class="divider-text"><span>ou cole o texto</span></div>
+
+        <textarea id="diet-text" class="diet-textarea" placeholder="Cole aqui o texto da sua dieta...&#10;&#10;CAFÉ DA MANHÃ&#10;2 ovos mexidos&#10;1 banana prata&#10;30g aveia&#10;&#10;ALMOÇO&#10;150g frango grelhado&#10;100g arroz integral..." rows="12"></textarea>
+
+        <div class="preview-area" id="preview-area" hidden>
+          <div class="preview-header">
+            <span class="preview-label">Texto extraído</span>
+            <button class="link-btn" id="clear-preview">Limpar</button>
+          </div>
+          <pre id="preview-text" class="preview-text"></pre>
+        </div>
+
+        <div class="settings-row">
+          <div class="setting-field">
+            <label class="field-label" for="days-input">Dias</label>
+            <input type="number" id="days-input" class="field-input" value="7" min="1" max="30" />
+          </div>
+          <div class="setting-field">
+            <label class="field-label" for="people-input">Pessoas</label>
+            <input type="number" id="people-input" class="field-input" value="1" min="1" max="20" />
+          </div>
+        </div>
+
+        <button class="primary-btn" id="generate-btn">Gerar lista de compras</button>
+
+        <div id="parse-error" class="error-msg" hidden></div>
+      </section>
+
+      <!-- TAB: LIST -->
+      <section id="tab-list" class="tab-panel" role="tabpanel" hidden>
+        <div class="list-toolbar">
+          <h2 class="section-title">Lista da semana</h2>
+          <div class="toolbar-actions">
+            <button class="icon-btn" id="export-txt-btn" title="Exportar TXT">↓ TXT</button>
+            <button class="icon-btn" id="copy-btn" title="Copiar">Copiar</button>
+            <button class="icon-btn" id="share-btn" title="Compartilhar">Compartilhar</button>
+          </div>
+        </div>
+
+        <div id="shopping-list" class="shopping-list">
+          <p class="empty-state">Nenhuma lista gerada ainda.<br /><button class="link-btn" data-goto="import">Importe sua dieta</button> para começar.</p>
+        </div>
+
+        <div id="copy-toast" class="toast" hidden>Lista copiada!</div>
+      </section>
+
+      <!-- TAB: MARKET -->
+      <section id="tab-market" class="tab-panel" role="tabpanel" hidden>
+        <div class="section-header">
+          <h2 class="section-title">Planejamento da Feira</h2>
+          <p class="section-sub">Itens na ordem do mercado, do início ao fim.</p>
+        </div>
+        <div id="market-list" class="shopping-list">
+          <p class="empty-state">Gere sua lista primeiro.</p>
+        </div>
+      </section>
+
+      <!-- TAB: STOCK -->
+      <section id="tab-stock" class="tab-panel" role="tabpanel" hidden>
+        <div class="section-header">
+          <h2 class="section-title">Já tenho em casa</h2>
+          <p class="section-sub">O saldo será descontado da lista gerada.</p>
+        </div>
+
+        <div class="add-stock-row">
+          <input type="text" id="stock-item-input" class="field-input flex-grow" placeholder="Ex: ovo, aveia, arroz…" />
+          <input type="text" id="stock-qty-input" class="field-input stock-qty" placeholder="Qtd" />
+          <button class="secondary-btn" id="add-stock-btn">Adicionar</button>
+        </div>
+
+        <ul id="stock-list" class="stock-list">
+          <li class="empty-state">Nenhum item no estoque.</li>
+        </ul>
+      </section>
+
+      <!-- TAB: HISTORY -->
+      <section id="tab-history" class="tab-panel" role="tabpanel" hidden>
+        <div class="section-header">
+          <h2 class="section-title">Histórico</h2>
+          <p class="section-sub">Suas listas salvas localmente.</p>
+        </div>
+        <ul id="history-list" class="history-list">
+          <li class="empty-state">Nenhuma lista salva.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  <script src="categories.js"></script>
+  <script src="parser.js"></script>
+  <script src="calculator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
