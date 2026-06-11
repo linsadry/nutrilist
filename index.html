@@ -94,6 +94,23 @@
         <div id="parse-error" class="error-msg" hidden></div>
       </section>
 
+      <!-- TAB: REVIEW -->
+      <section id="tab-review" class="tab-panel" role="tabpanel" hidden>
+        <div class="section-header">
+          <h2 class="section-title">Confira os itens</h2>
+          <p class="section-sub">Ajuste nomes e quantidades antes de gerar a lista. Toque para editar.</p>
+        </div>
+
+        <div id="review-list" class="review-list"></div>
+
+        <button class="link-btn add-review-item" id="add-review-item">+ Adicionar item manualmente</button>
+
+        <div class="review-actions">
+          <button class="secondary-btn" id="review-back">Voltar</button>
+          <button class="primary-btn review-confirm" id="review-confirm">Confirmar e gerar <span class="btn-arrow">→</span></button>
+        </div>
+      </section>
+
       <!-- TAB: LIST -->
       <section id="tab-list" class="tab-panel" role="tabpanel" hidden>
         <div class="list-toolbar">
@@ -153,6 +170,14 @@
       </section>
     </main>
   </div>
+
+  <datalist id="unit-options">
+    <option value="un"></option>
+    <option value="g"></option>
+    <option value="kg"></option>
+    <option value="ml"></option>
+    <option value="l"></option>
+  </datalist>
 
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
